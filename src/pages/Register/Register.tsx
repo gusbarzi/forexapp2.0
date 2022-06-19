@@ -50,7 +50,7 @@ export default function Register() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <Header />
+                <Header home={true} />
                 <Container classes={{ root: 'regis' }} component="main" maxWidth="xs">
                     <Box
                         sx={{

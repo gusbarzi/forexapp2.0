@@ -1,3 +1,7 @@
+//hooks
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+//axios
 import axios from 'axios';
 //Formnik
 import { useFormik } from 'formik';
@@ -13,33 +17,36 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../../components/Nav/Nav';
 
+
+
 const theme = createTheme();
 
 const validationSchema = yup.object({
     email: yup
-    .string()
-    .required('Enter is required')
-    .email('Enter a valid email'),
+        .string()
+        .required('Enter is required')
+        .email('Enter a valid email'),
     password: yup
-    .string()
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
+        .string()
+        .min(8, 'Password should be of minimum 8 characters length')
+        .required('Password is required'),
 });
 
 export default function Login() {
+    const { signIn } = useContext(AuthContext);
 
     const formik = useFormik({
-        onSubmit: values => axios.post('http://localhost:3000/auth/authenticate', {
-                email: values.email,
-                password: values.password
-        }),
+        onSubmit: async data => {
+            await signIn(data)
+        },
         validationSchema,
         validateOnMount: true,
-        
+
         initialValues: {
             email: '',
             password: ''
         }
+
     })
 
     return (
@@ -69,8 +76,10 @@ export default function Login() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                value={formik.values.email}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
+                                disabled={formik.isSubmitting}
                             />
                             {(formik.touched.email && formik.errors.email) && (
                                 <span style={{ color: 'red', fontSize: '14px' }}>{formik.errors.email}</span>
@@ -86,20 +95,22 @@ export default function Login() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                value={formik.values.password}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
+                                disabled={formik.isSubmitting}
                             />
                             {(formik.touched.password && formik.errors.password) && (
                                 <span style={{ color: 'red', fontSize: '14px' }}>{formik.errors.password}</span>
                             )}
                             <Button
-                                disabled={!formik.isValid}
                                 type="submit"
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                disabled={formik.isSubmitting || !formik.isValid}
                             >
-                                Sign In
+                                {formik.isSubmitting ? 'Sending...' : 'Sign in'}
                             </Button>
 
                             <Grid container>

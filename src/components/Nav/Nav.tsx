@@ -1,28 +1,57 @@
 import { Button } from '@mui/material';
 import { Link } from "../../components/Link/Link";
 import styles from '../../../styles/Nav.module.css';
+import Userbutton from '../Userbutton/Userbutton';
 
-export const Header = () => {
+export const Header = ({ home }: any) => {
     return (
         <div>
             <header className={styles.container}>
                 <nav className={styles.nav}>
 
                     <a className={styles.nav__logo} href={"/dashboard"}>Forex Tranding App</a>
+                    {
 
-                    <ul className={styles.nav__list}>
+                     home === true && <ul className={styles.nav__list}>
+                            <li>
+                                <Link href="/login">
+                                    <Button className={styles.button} color="primary">Sign in</Button>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/register">
+                                    <Button className={styles.button} color="primary">Create an account</Button>
+                                </Link>
+                            </li>
+                        </ul>    
+
+                    }
+
+                    {
+                        home === false && <ul className={styles.nav__list}>
                         <li>
-                            <Link href="/login">
-                                <Button className={styles.button} color="primary">Sign in</Button>
+                            <Link href="/portifolio">
+                                <Button className={styles.button} color="primary">Wallet</Button>
                             </Link>
                         </li>
                         <li>
-                            <Link href="/register">
-                                <Button className={styles.button} color="primary">Create an account</Button>
+                            <Link href="/trading">
+                                <Button className={styles.button} color="primary">Forex Trade</Button>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/transactions">
+                                <Button className={styles.button} color="primary">Transactions History</Button>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="#">
+                                <Userbutton />
                             </Link>
                         </li>
                     </ul>
 
+                }
                 </nav>
             </header>
         </div>

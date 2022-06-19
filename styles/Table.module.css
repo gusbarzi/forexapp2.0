@@ -1,0 +1,8 @@
+table, td, th {    
+    border: 1px solid rgb(196, 195, 195);
+    text-align: left;
+}
+
+th, td {
+    padding: 15px;
+}
