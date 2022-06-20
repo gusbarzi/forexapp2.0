@@ -52,7 +52,7 @@ export default function Login() {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <Header />
+                <Header home={true} />
                 <Container classes={{ root: 'cont' }} component="main" maxWidth="xs">
                     <Box
                         sx={{
