@@ -38,6 +38,7 @@ export default function Login() {
     const formik = useFormik({
         onSubmit: async data => {
             await signIn(data)
+            console.log(data)
         },
         validationSchema,
         validateOnMount: true,

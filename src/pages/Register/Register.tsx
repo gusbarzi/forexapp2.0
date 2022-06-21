@@ -13,12 +13,15 @@ import Header from '../../components/Nav/Nav';
 const theme = createTheme();
 
 const validationSchema = yup.object({
-    name: yup
+    firstName: yup
+        .string()
+        .required(),
+    lastName: yup
         .string()
         .required(),
     email: yup
         .string()
-        .required('Enter is required')
+        .required('Email is required')
         .email('Enter a valid email'),
     password: yup
         .string()
@@ -29,8 +32,9 @@ const validationSchema = yup.object({
 export default function Register() {
 
     const formik = useFormik({
-        onSubmit: values => axios.post('http://localhost:3000/auth/register', {
-            name: values.name,
+        onSubmit: values => axios.post('http://localhost:3000/client', {
+            firstName: values.firstName,
+            lastName: values.lastName,
             email: values.email,
             password: values.password,
             balance: 0,
@@ -41,7 +45,8 @@ export default function Register() {
         validateOnMount: true,
 
         initialValues: {
-            name: '',
+            firstName: '',
+            lastName: '',
             email: '',
             password: ''
         }
@@ -60,25 +65,42 @@ export default function Register() {
                             alignItems: 'center',
                         }}
                     >
-                        <Typography component="h1" variant="h5">
+                        <Typography sx={{ m: 2}} component="h1" variant="h5">
                             Sign up
                         </Typography>
                         <form onSubmit={formik.handleSubmit}>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} sm={12}>
+                                <Grid item xs={12} sm={6}>
 
                                     <TextField
                                         required
                                         fullWidth
-                                        id="name"
-                                        label="Name"
-                                        name="name"
+                                        id="firstName"
+                                        label="First Name"
+                                        name="firstName"
                                         autoComplete="family-name"
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}
                                     />
-                                    {(formik.touched.name && formik.errors.name) && (
-                                        <span style={{ color: 'red', fontSize: '14px' }}>{formik.errors.name}</span>
+                                    {(formik.touched.firstName && formik.errors.firstName) && (
+                                        <span style={{ color: 'red', fontSize: '14px' }}>{formik.errors.firstName}</span>
+                                    )}
+
+                                </Grid>
+
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        id="lastName"
+                                        label="Last Name"
+                                        name="lastName"
+                                        autoComplete="family-name"
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                    />
+                                    {(formik.touched.lastName && formik.errors.lastName) && (
+                                        <span style={{ color: 'red', fontSize: '14px' }}>{formik.errors.lastName}</span>
                                     )}
 
                                 </Grid>

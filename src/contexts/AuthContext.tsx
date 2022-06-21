@@ -24,20 +24,21 @@ export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({ children }: any) {
     const [user, setUser] = useState<any>()
-
+    console.log(user, 'To aqui')
     const isAuthenticated = !!user;
 
     async function signIn({ email, password }: SignInData) {
-        const { token, user }: any = await axios.post('http://localhost:3000/auth/authenticate', {
+        const { token, user }: any = await axios.post('http://localhost:3000/client/authenticate', {
             email,
             password
         })
-
+        console.log(user)
         setCookie(undefined, 'nextauth.token', token, {
             maxAge: 60 * 60 * 24, // 1 day
         })
 
         setUser(user)
+
 
         Router.push('/home')
     }
@@ -47,4 +48,5 @@ export function AuthProvider({ children }: any) {
             {children}
         </AuthContext.Provider>
     )
+
 }
