@@ -9,6 +9,9 @@ import Header from "../../components/Nav/Nav";
 //CSS
 import styles from "../../../styles/Table.module.css";
 
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations'; 
+
 interface IRequest {
     id: string,
     id_client: string,
@@ -17,6 +20,21 @@ interface IRequest {
   }
 
 export const Transactions = () => {
+    const router = useRouter();
+    const {locale} = router;
+
+    const [language, setLanguage] = useState()
+
+    const getLanguage = () => {
+       return window.localStorage.getItem('i18nextLng')
+    }
+    
+    useEffect(() => {
+        const get: any = getLanguage();
+        setLanguage(get);
+    }, [])
+
+    const a = locale === language ? pt : en;
 
     const [transactions, setTransactions] = useState<Array<IRequest>>([]);
     
@@ -46,10 +64,10 @@ export const Transactions = () => {
                         <table style={{ width: '100%' }}>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Balance (£)</th>
-                                    <th>Date</th>
+                                    <th>{a.thID}</th>
+                                    <th>{a.thName}</th>
+                                    <th>{a.thBalance}</th>
+                                    <th>{a.thData}</th>
                                 </tr>
                             </thead>
                             <tbody>

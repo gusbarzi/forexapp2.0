@@ -1,6 +1,5 @@
 //React Hooks
 import { useEffect, useState } from 'react';
-
 //axios
 import axios from 'axios';
 //Material UI
@@ -8,8 +7,10 @@ import { Container, FormControl, Grid, InputAdornment, InputLabel, OutlinedInput
 //components
 import Header from "../../components/Nav/Nav"
 import InputUSD from '../../components/Input/InputUSD';
-import InputGBP from '../../components/Input/InputGBP';
 import { Link } from "../../components/Link/Link";
+
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -36,23 +37,21 @@ export const Portifolio = () => {
     const handleClosegbp = () => setOpengbp(false);
     const handleCloseusd = () => setOpenusd(false);
 
-   
-    const deposit = async () => {
-            const tokenLocal = window.localStorage.getItem('token')
-            await axios.put(`http://localhost:3000/deposit/trade/:id`, {
-                headers: {
-                    'Authorization': 'bearer' + tokenLocal
-                }
-            }).then((response) => {
-                setBalanceGbp(response.data.gbpBalance)
-            }).catch((error) => {
+    const router = useRouter();
+    const {locale} = router;
 
-            })
-        }
+    const [language, setLanguage] = useState()
+
+    const getLanguage = () => {
+       return window.localStorage.getItem('i18nextLng')
+    }
     
-        useEffect(() => {
-            deposit();
-        }, [])
+    useEffect(() => {
+        const get: any = getLanguage();
+        setLanguage(get);
+    }, [])
+
+    const a = locale === language ? pt : en;
 
     return ( 
         <>
@@ -65,7 +64,7 @@ export const Portifolio = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
 
                             <Typography sx={{ height: 150 }} variant="h3">
-                                Balance
+                                {a.titlePortifolio}
                             </Typography>
 
                             <Grid container rowSpacing={4} columnSpacing={{ xs: 2, sm: 3, md: 10 }}>
@@ -78,7 +77,7 @@ export const Portifolio = () => {
 
                                 <Grid item xs={4}>
                                     <Link href="/portifolio">
-                                        <Button onClick={handleOpengbp} variant="contained" color="success" classes={{ root: 'button' }}>Deposit</Button>
+                                        <Button onClick={handleOpengbp} variant="contained" color="success" classes={{ root: 'button' }}>{a.depositButtons}</Button>
                                     </Link>
                                 </Grid>
 
@@ -90,7 +89,7 @@ export const Portifolio = () => {
 
                                 <Grid item xs={4}>
                                     <Link href="/portifolio">
-                                        <Button onClick={handleOpenusd} variant="contained" color="success" classes={{ root: 'button' }}>Deposit</Button>
+                                        <Button onClick={handleOpenusd} variant="contained" color="success" classes={{ root: 'button' }}>{a.depositButtons}</Button>
                                     </Link>
                                 </Grid>
 
@@ -100,7 +99,7 @@ export const Portifolio = () => {
                                 <Modal open={openGbp} onClose={handleClosegbp} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                                     <Box sx={style}>
                                         <FormControl fullWidth >
-                                            <InputLabel color="secondary" htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                                            <InputLabel color="secondary" htmlFor="outlined-adornment-amount">{a.amountLabel}</InputLabel>
 
                                             <OutlinedInput
                                                 value={gbpBalance}
@@ -108,10 +107,10 @@ export const Portifolio = () => {
                                                 color="secondary"
                                                 id="outlined-adornment-amount"
                                                 startAdornment={<InputAdornment position="start">£</InputAdornment>}
-                                                label="Amount"
+                                                label={a.amountLabel}
                                             />
                                         </FormControl>
-                                        <Button onClick={() => deposit()} color="success">Deposit</Button>
+                                        <Button color="success">{a.depositButtons}</Button>
                                     </Box>
                                 </Modal>
                             </div>
@@ -120,7 +119,7 @@ export const Portifolio = () => {
                                 <Modal open={openUsd} onClose={handleCloseusd} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                                     <Box sx={style}>
                                         <InputUSD />
-                                        <Button color="success">Deposit</Button>
+                                        <Button color="success">{a.depositButtons}</Button>
                                     </Box>
                                 </Modal>
                             </div>

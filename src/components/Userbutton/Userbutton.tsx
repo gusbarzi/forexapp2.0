@@ -10,6 +10,11 @@ import Logout from '@mui/icons-material/Logout';
 import { Link } from "../../components/Link/Link";
 import { Button } from '@mui/material';
 
+import { useEffect, useState } from 'react';
+
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations'; 
+
 export default function Userbutton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -28,6 +33,22 @@ export default function Userbutton() {
     window.location.reload();
     localStorage.removeItem('user_login');
   }
+
+  const router = useRouter();
+  const {locale} = router;
+
+  const [language, setLanguage] = useState()
+
+  const getLanguage = () => {
+     return window.localStorage.getItem('i18nextLng')
+  }
+  
+  useEffect(() => {
+      const get: any = getLanguage();
+      setLanguage(get);
+  }, [])
+
+  const a = locale === language ? pt : en;;
 
   return (
     <React.Fragment>
@@ -81,7 +102,7 @@ export default function Userbutton() {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem>
-          <Avatar /> <Link href="/portifolio">Profile</Link>
+          <Avatar /> <Link href="/portifolio">{a.profile}</Link>
         </MenuItem>
         <MenuItem>
           <ListItemIcon>
@@ -93,7 +114,7 @@ export default function Userbutton() {
             color="secondary"
             variant="text"
           >
-            Logout
+            {a.logout}
           </Button>
 
         </MenuItem>

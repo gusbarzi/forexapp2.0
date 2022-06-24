@@ -9,6 +9,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Link } from "../../components/Link/Link";
 import Header from '../../components/Nav/Nav';
 
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations';
+
+import { useEffect, useState } from 'react';
+
 
 const theme = createTheme();
 
@@ -30,6 +35,21 @@ const validationSchema = yup.object({
 });
 
 export default function Register() {
+    const router = useRouter();
+    const {locale} = router;
+
+    const [language, setLanguage] = useState()
+
+    const getLanguage = () => {
+       return window.localStorage.getItem('i18nextLng')
+    }
+    
+    useEffect(() => {
+        const get: any = getLanguage();
+        setLanguage(get);
+    }, [])
+
+    const a = locale === language ? pt : en;
 
     const formik = useFormik({
         onSubmit: values => axios.post('http://localhost:3000/client', {
@@ -66,7 +86,7 @@ export default function Register() {
                         }}
                     >
                         <Typography sx={{ m: 2}} component="h1" variant="h5">
-                            Sign up
+                            {a.titleSignup}
                         </Typography>
                         <form onSubmit={formik.handleSubmit}>
                             <Grid container spacing={2}>
@@ -76,7 +96,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         id="firstName"
-                                        label="First Name"
+                                        label={a.inputFirstName}
                                         name="firstName"
                                         autoComplete="family-name"
                                         onChange={formik.handleChange}
@@ -93,7 +113,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         id="lastName"
-                                        label="Last Name"
+                                        label={a.inputLastName}
                                         name="lastName"
                                         autoComplete="family-name"
                                         onChange={formik.handleChange}
@@ -111,7 +131,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         id="email"
-                                        label="Email Address"
+                                        label={a.inputSignupEmail}
                                         name="email"
                                         autoComplete="email"
                                         onChange={formik.handleChange}
@@ -129,7 +149,7 @@ export default function Register() {
                                         required
                                         fullWidth
                                         name="password"
-                                        label="Password"
+                                        label={a.inputSignupPassword}
                                         type="password"
                                         id="password"
                                         autoComplete="new-password"
@@ -150,12 +170,12 @@ export default function Register() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Sign Up
+                                {a.signupButton}
                             </Button>
                             <Grid container justifyContent="flex-end">
                                 <Grid item>
                                     <Link href="/login">
-                                        {"Already have an account? Sign in"}
+                                        {a.signupLink}
                                     </Link>
                                 </Grid>
                             </Grid>

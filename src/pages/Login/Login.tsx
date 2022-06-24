@@ -16,7 +16,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../../components/Nav/Nav';
 import Router from 'next/router';
-import { Token } from '@mui/icons-material';
+
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations';
+
+import { useEffect, useState } from 'react';
 
 
 
@@ -34,6 +38,22 @@ const validationSchema = yup.object({
 });
 
 export default function Login() {
+    const router = useRouter();
+    const {locale} = router;
+
+    const [language, setLanguage] = useState()
+
+    const getLanguage = () => {
+       return window.localStorage.getItem('i18nextLng')
+    }
+    
+    useEffect(() => {
+        const get: any = getLanguage();
+        setLanguage(get);
+    }, [])
+
+    const a = locale === language ? pt : en;
+
     const inLocalStorage = (token: string) => {
         window.localStorage.setItem('token', token);
     }
@@ -71,7 +91,7 @@ export default function Login() {
                         }}
                     >
                         <Typography component="h1" variant="h5">
-                            Sign in
+                            {a.title}
                         </Typography>
 
                         <form onSubmit={formik.handleSubmit}>
@@ -81,7 +101,7 @@ export default function Login() {
                                 fullWidth
                                 margin="normal"
                                 id="email"
-                                label="E-mail Address"
+                                label={a.inputEmail}
                                 name="email"
                                 autoComplete="email"
                                 value={formik.values.email}
@@ -99,7 +119,7 @@ export default function Login() {
                                 fullWidth
                                 margin="normal"
                                 name="password"
-                                label="Password"
+                                label={a.inputPassword}
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
@@ -118,13 +138,13 @@ export default function Login() {
                                 sx={{ mt: 3, mb: 2 }}
                                 disabled={formik.isSubmitting || !formik.isValid}
                             >
-                                {formik.isSubmitting ? 'Sending...' : 'Sign in'}
+                                {a.signinButton}
                             </Button>
 
                             <Grid container>
                                 <Grid item>
                                     <Link href="/register">
-                                        {"Don't have an account? Sign Up"}
+                                        {a.signinLink}
                                     </Link>
                                 </Grid>
                             </Grid>

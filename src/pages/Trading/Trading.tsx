@@ -9,7 +9,27 @@ import Header from "../../components/Nav/Nav";
 //CSS
 import styles from "../../../styles/Trade.module.css";
 
+import { useRouter } from "next/router";
+import { en, pt } from '../../../translations'; 
+
+
 export const Trading = () => {
+    const router = useRouter();
+    const {locale} = router;
+
+    const [language, setLanguage] = useState()
+
+    const getLanguage = () => {
+       return window.localStorage.getItem('i18nextLng')
+    }
+    
+    useEffect(() => {
+        const get: any = getLanguage();
+        setLanguage(get);
+    }, [])
+
+    const a = locale === language ? pt : en;
+
     return (
         <>
             <Header home={false} />
@@ -43,7 +63,7 @@ export const Trading = () => {
                                 color="secondary"
                                 size="small"
                                 id="outlined-basic"
-                                label="Amount (£)"
+                                label={a.inputAmount}
                                 variant="outlined"
                                 sx={{
                                     width: 350,
@@ -65,7 +85,7 @@ export const Trading = () => {
                             />
 
                             <Button onClick={console.log} sx={{ width: 350 }} variant="contained" color="success">
-                                Buy
+                                {a.buyButton}
                             </Button>
 
                         </Box>
