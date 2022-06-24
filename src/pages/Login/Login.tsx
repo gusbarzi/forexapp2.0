@@ -1,6 +1,5 @@
 //hooks
 import { useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
 //axios
 import axios from 'axios';
 //Formnik
@@ -16,6 +15,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../../components/Nav/Nav';
+import Router from 'next/router';
+import { Token } from '@mui/icons-material';
 
 
 
@@ -24,7 +25,7 @@ const theme = createTheme();
 const validationSchema = yup.object({
     email: yup
         .string()
-        .required('Enter is required')
+        .required('Email is required')
         .email('Enter a valid email'),
     password: yup
         .string()
@@ -33,12 +34,19 @@ const validationSchema = yup.object({
 });
 
 export default function Login() {
-    const { signIn } = useContext(AuthContext);
+    const inLocalStorage = (token: string) => {
+        window.localStorage.setItem('token', token);
+    }
 
     const formik = useFormik({
         onSubmit: async data => {
-            await signIn(data)
-            console.log(data)
+            await axios.post('http://localhost:3000/client/authenticate', {
+                email: data.email,
+                password: data.password
+            }).then((response) => {
+                inLocalStorage(response.data)
+                Router.push('/home');
+            })
         },
         validationSchema,
         validateOnMount: true,
@@ -47,7 +55,6 @@ export default function Login() {
             email: '',
             password: ''
         }
-
     })
 
     return (
@@ -74,7 +81,7 @@ export default function Login() {
                                 fullWidth
                                 margin="normal"
                                 id="email"
-                                label="Email Address"
+                                label="E-mail Address"
                                 name="email"
                                 autoComplete="email"
                                 value={formik.values.email}

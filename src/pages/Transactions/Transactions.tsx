@@ -10,16 +10,30 @@ import Header from "../../components/Nav/Nav";
 import styles from "../../../styles/Table.module.css";
 
 interface IRequest {
-    _id: string,
-    userId: string,
-    name: string,
-    balance: number,
-    dateCreate: string
+    id: string,
+    id_client: string,
+    transaction: string,
+    created_at: number,
   }
 
 export const Transactions = () => {
 
     const [transactions, setTransactions] = useState<Array<IRequest>>([]);
+    
+    const getData = async () => {
+        const tokenLocal = window.localStorage.getItem('token')
+        await axios.get('http://localhost:3000/client/trade', {
+            headers: {
+                'Authorization': 'bearer' + tokenLocal
+            }
+        }).then((response) => {
+            setTransactions(response.data[0].transactions)
+        }).catch((error) => {});
+    }
+
+    useEffect(() => {
+        getData();
+    }, [])
 
     return (
         <>
@@ -35,17 +49,17 @@ export const Transactions = () => {
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Balance (£)</th>
-                                    <th>Data</th>
+                                    <th>Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactions?.map((transaction) => {
+                                {transactions?.map(({ id, id_client, transaction, created_at }) => {
                                     return (
-                                        <tr>
-                                            <td>{transaction.userId}</td>
-                                            <td>{transaction.name}</td>
-                                            <td>{transaction.balance}</td>
-                                            <td>{transaction.dateCreate}</td>
+                                        <tr key={id}>
+                                            <td>{id}</td>
+                                            <td>{id_client}</td>
+                                            <td>{transaction}</td>
+                                            <td>{created_at}</td>
                                         </tr>
                                     );
                                 })}

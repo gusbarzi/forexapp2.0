@@ -1,5 +1,5 @@
 //React Hooks
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 //axios
 import axios from 'axios';
@@ -25,6 +25,7 @@ const style = {
 };
 
 export const Portifolio = () => {
+    const [gbpBalance, setBalanceGbp]: any = useState('');
     //Modal
     const [openGbp, setOpengbp] = useState(false);
     const [openUsd, setOpenusd] = useState(false)
@@ -35,7 +36,25 @@ export const Portifolio = () => {
     const handleClosegbp = () => setOpengbp(false);
     const handleCloseusd = () => setOpenusd(false);
 
-    return (
+   
+    const deposit = async () => {
+            const tokenLocal = window.localStorage.getItem('token')
+            await axios.put(`http://localhost:3000/deposit/trade/:id`, {
+                headers: {
+                    'Authorization': 'bearer' + tokenLocal
+                }
+            }).then((response) => {
+                setBalanceGbp(response.data.gbpBalance)
+            }).catch((error) => {
+
+            })
+        }
+    
+        useEffect(() => {
+            deposit();
+        }, [])
+
+    return ( 
         <>
             <Header home={false} />
             <Container maxWidth="md">
@@ -80,8 +99,19 @@ export const Portifolio = () => {
                             <div>
                                 <Modal open={openGbp} onClose={handleClosegbp} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                                     <Box sx={style}>
-                                        <InputGBP />
-                                        <Button color="success">Deposit</Button>
+                                        <FormControl fullWidth >
+                                            <InputLabel color="secondary" htmlFor="outlined-adornment-amount">Amount</InputLabel>
+
+                                            <OutlinedInput
+                                                value={gbpBalance}
+                                                onChange={(e) => setBalanceGbp(e.target.value)}
+                                                color="secondary"
+                                                id="outlined-adornment-amount"
+                                                startAdornment={<InputAdornment position="start">£</InputAdornment>}
+                                                label="Amount"
+                                            />
+                                        </FormControl>
+                                        <Button onClick={() => deposit()} color="success">Deposit</Button>
                                     </Box>
                                 </Modal>
                             </div>

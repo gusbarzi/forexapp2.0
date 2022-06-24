@@ -27,7 +27,6 @@ const handleChange =
                 startAdornment={<InputAdornment position="start">£</InputAdornment>}
                 label="Amount"
                 />
-                <Button color="success">Deposit</Button>
         </FormControl>
     )
 }
