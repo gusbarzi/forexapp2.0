@@ -54,7 +54,8 @@ export default function Login() {
 
     const a = locale === language ? pt : en;
 
-    const inLocalStorage = (token: string) => {
+    const inLocalStorage = (token: any) => {
+        
         window.localStorage.setItem('token', token);
     }
 
@@ -64,8 +65,10 @@ export default function Login() {
                 email: data.email,
                 password: data.password
             }).then((response) => {
-                inLocalStorage(response.data)
+                const user = JSON.parse(response.data.clientData)
+                inLocalStorage(user)
                 Router.push('/home');
+                console.log(response.data);
             })
         },
         validationSchema,

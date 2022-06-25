@@ -53,6 +53,10 @@ export const Portifolio = () => {
 
     const a = locale === language ? pt : en;
 
+
+    
+
+
     return ( 
         <>
             <Header home={false} />
