@@ -10,25 +10,31 @@ import Header from "../../components/Nav/Nav";
 import styles from "../../../styles/Table.module.css";
 
 import { useRouter } from "next/router";
-import { en, pt } from '../../../translations'; 
+import { en, pt } from '../../../translations';
 
 interface IRequest {
     id: string,
-    id_client: string,
-    transaction: string,
+    firstName: string,
+    lastName: string,
+    balance: number,
     created_at: number,
-  }
+}
 
 export const Transactions = () => {
     const router = useRouter();
-    const {locale} = router;
+    const { locale } = router;
 
     const [language, setLanguage] = useState()
+    const [user, setUser]: any = useState({});
+
+    const [transactions, setTransactions] = useState([]);
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const getLanguage = () => {
-       return window.localStorage.getItem('i18nextLng')
+        return window.localStorage.getItem('i18nextLng')
     }
-    
+
     useEffect(() => {
         const get: any = getLanguage();
         setLanguage(get);
@@ -36,21 +42,28 @@ export const Transactions = () => {
 
     const a = locale === language ? pt : en;
 
-    const [transactions, setTransactions] = useState<Array<IRequest>>([]);
-    
+    const getUser = () => {
+        setUser(JSON.parse(window.localStorage.getItem('token')))
+    }
+
     const getData = async () => {
-        const tokenLocal = window.localStorage.getItem('token')
-        await axios.get('http://localhost:3000/client/trade', {
+        const tokenLocal = JSON.parse(window.localStorage.getItem('token'))
+        await axios.get('http://localhost:3000/client/trades', {
             headers: {
-                'Authorization': 'bearer' + tokenLocal
+                'Authorization': 'bearer ' + tokenLocal.token
             }
         }).then((response) => {
+            setName(response.data[0].firstName)
+            setLastName(response.data[0].lastName)
             setTransactions(response.data[0].transactions)
-        }).catch((error) => {});
+        }).catch((error) => {
+            // console.log(error)
+        });
     }
 
     useEffect(() => {
         getData();
+        getUser();
     }, [])
 
     return (
@@ -65,18 +78,16 @@ export const Transactions = () => {
                             <thead>
                                 <tr>
                                     <th>{a.thID}</th>
-                                    <th>{a.thName}</th>
                                     <th>{a.thBalance}</th>
                                     <th>{a.thData}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactions?.map(({ id, id_client, transaction, created_at }) => {
+                                {transactions?.map(({ id, dolar, created_at }) => {
                                     return (
                                         <tr key={id}>
                                             <td>{id}</td>
-                                            <td>{id_client}</td>
-                                            <td>{transaction}</td>
+                                            <td>{dolar}</td>
                                             <td>{created_at}</td>
                                         </tr>
                                     );

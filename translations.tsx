@@ -47,7 +47,8 @@ export const en = {
 
     //transactions
     thID: "ID",
-    thName: "Name",
+    thfName: "First Name",
+    thlName: "Last Name",
     thBalance: "Balance (£)",
     thData: "Date",
 }
@@ -101,7 +102,8 @@ export const pt = {
 
     //transactions
     thID: "ID",
-    thName: "Nome",
+    thfName: "Nome",
+    thlName: "sobrenome",
     thBalance: "Saldo (£)",
     thData: "Data de transação",
 }

@@ -31,6 +31,8 @@ export const Portifolio = () => {
     const [openGbp, setOpengbp] = useState(false);
     const [openUsd, setOpenusd] = useState(false)
 
+    const [user, setUser]: any = useState({});
+
     const handleOpengbp = () => setOpengbp(true);
     const handleOpenusd = () => setOpenusd(true);
 
@@ -54,7 +56,39 @@ export const Portifolio = () => {
     const a = locale === language ? pt : en;
 
 
-    
+    const getUser = () => {
+        setUser(JSON.parse(window.localStorage.getItem('token')))
+    }
+
+    useEffect(() => {
+        getUser()
+    }, [])
+
+    const deposit = () => {
+        axios.put(`http://localhost:3000/deposit/trade/${user.clientData.id}`, { balance: Number(gbpBalance) + user.clientData.balance }, {
+            headers: {
+                'Authorization': 'bearer ' + user.token
+            }
+        })
+            .then((response) => {
+                const newData = {
+                    clientData: {
+                        balance: response.data.balance,
+                        dolar: user.clientData.dolar,
+                        email: user.clientData.email,
+                        firstName: user.clientData.fistName,
+                        id: response.data.id,
+                        lastName: user.clientData.lastName
+                    },
+                    token: user.token
+                }
+                window.localStorage.setItem('token', JSON.stringify(newData))
+                window.location.reload();
+
+            }).catch((error) => {
+                // console.log(error)
+            })
+    }
 
 
     return ( 
@@ -75,7 +109,7 @@ export const Portifolio = () => {
 
                                 <Grid item xs={8}>
                                     <Typography sx={{ m: 1 }} variant="h6" gutterBottom component="div">
-                                        GBP: {'0,00'}
+                                        GBP: {user?.clientData?.balance}
                                     </Typography>
                                 </Grid>
 
@@ -87,7 +121,7 @@ export const Portifolio = () => {
 
                                 <Grid item xs={8}>
                                     <Typography sx={{ m: 1 }} variant="h6" gutterBottom component="div">
-                                        USD: {'0,00'}
+                                        USD: {user?.clientData?.dolar}
                                     </Typography>
                                 </Grid>
 
@@ -114,7 +148,7 @@ export const Portifolio = () => {
                                                 label={a.amountLabel}
                                             />
                                         </FormControl>
-                                        <Button color="success">{a.depositButtons}</Button>
+                                        <Button color="success" onClick={() => deposit()}>{a.depositButtons}</Button>
                                     </Box>
                                 </Modal>
                             </div>

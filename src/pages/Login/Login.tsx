@@ -54,9 +54,8 @@ export default function Login() {
 
     const a = locale === language ? pt : en;
 
-    const inLocalStorage = (token: any) => {
-        
-        window.localStorage.setItem('token', token);
+    const inLocalStorage = (user: any) => {
+        window.localStorage.setItem('token', JSON.stringify(user));
     }
 
     const formik = useFormik({
@@ -65,10 +64,8 @@ export default function Login() {
                 email: data.email,
                 password: data.password
             }).then((response) => {
-                const user = JSON.parse(response.data.clientData)
-                inLocalStorage(user)
+                inLocalStorage(response.data)
                 Router.push('/home');
-                console.log(response.data);
             })
         },
         validationSchema,
