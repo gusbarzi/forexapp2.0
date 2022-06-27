@@ -62,8 +62,8 @@ export const Header = ({ home }: any) => {
                         home === false && <ul className={styles.nav__list}>
                             <li>
                                 <ButtonGroup aria-label="small outlined button group" variant="text">
-                                    <Button className={styles.button}>EN</Button>
-                                    <Button className={styles.button}>PT</Button>
+                                    <Button onClick={() => {handleSelectChange('en-US')}} className={styles.button}>EN</Button>
+                                    <Button onClick={() => {handleSelectChange('pt-BR')}} className={styles.button}>PT</Button>
                                 </ButtonGroup>
                             </li>
                             <li>

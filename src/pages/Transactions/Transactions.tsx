@@ -71,24 +71,24 @@ export const Transactions = () => {
             <Header home={false} />
             <Container maxWidth="md">
                 <Box sx={{ width: '100%', height: 890, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-
                     <Box sx={{ margin: 'auto', width: 900, height: 600, backgroundColor: '#e9e9e9', borderRadius: 5 }}>
+                    <p>{a.name} {name} {lastName}</p>
 
-                        <table style={{ width: '100%' }}>
+                        <table className={styles.tableClass}>
                             <thead>
                                 <tr>
-                                    <th>{a.thID}</th>
-                                    <th>{a.thBalance}</th>
-                                    <th>{a.thData}</th>
+                                    <th className={styles.thtd}>{a.thID}</th>
+                                    <th className={styles.thtd}>{a.thBalance}</th>
+                                    <th className={styles.thtd}>{a.thData}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {transactions?.map(({ id, dolar, created_at }) => {
                                     return (
                                         <tr key={id}>
-                                            <td>{id}</td>
-                                            <td>{dolar}</td>
-                                            <td>{created_at}</td>
+                                            <td className={styles.thtd}>{id}</td>
+                                            <td className={styles.thtd}>{dolar}</td>
+                                            <td className={styles.thtd}>{created_at}</td>
                                         </tr>
                                     );
                                 })}

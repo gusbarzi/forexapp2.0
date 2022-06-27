@@ -46,6 +46,7 @@ export const en = {
     buyButton: "Buy",
 
     //transactions
+    name: "Name: ",
     thID: "ID",
     thfName: "First Name",
     thlName: "Last Name",
@@ -101,6 +102,7 @@ export const pt = {
     buyButton: "Comprar",
 
     //transactions
+    name: "Nome: ",
     thID: "ID",
     thfName: "Nome",
     thlName: "sobrenome",
